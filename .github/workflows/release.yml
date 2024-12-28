@@ -11,19 +11,19 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu, windows, macos]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu
             arch: amd64
-          - os: ubuntu-latest
+          - os: ubuntu
             arch: arm64
-          - os: windows-latest
+          - os: windows
             arch: amd64
-          - os: macos-latest
+          - os: macos
             arch: amd64
     
     env:
-      GOOS: $(echo ${{ matrix.os }} | cut -d '-' -f 1)
+      GOOS: ${{ matrix.os }}
       GOARCH: ${{ matrix.arch }}
 
     steps:
