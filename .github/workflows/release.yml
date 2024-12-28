@@ -6,7 +6,27 @@ on:
       - main
 
 jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download and extract dist
+      run: |
+        REPO="chord-dht/chord-frontend"
+        LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep "browser_download_url.*dist.tar.gz" | cut -d '"' -f 4)
+        curl -L -o dist.tar.gz $LATEST_RELEASE
+        tar -xzf dist.tar.gz
+
+    - name: Upload dist artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: dist
+
   build:
+    needs: download
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,12 +50,11 @@ jobs:
       with:
         go-version: '1.23'
 
-    - name: Download and extract dist
-      run: |
-        REPO="chord-dht/chord-frontend"
-        LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep "browser_download_url.*dist.tar.gz" | cut -d '"' -f 4)
-        curl -L -o dist.tar.gz $LATEST_RELEASE
-        tar -xzf dist.tar.gz
+    - name: Download dist artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: dist
+        path: dist
 
     - name: Build
       run: |
@@ -49,7 +68,7 @@ jobs:
         tar -czf chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz -C release .
     
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: chord-client-${{ matrix.os }}-${{ matrix.arch }}
         path: chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
@@ -59,22 +78,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download artifacts (linux/amd64)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: chord-client-linux-amd64
         path: ./release
     - name: Download artifacts (linux/arm64)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: chord-client-linux-arm64
         path: ./release
     - name: Download artifacts (windows/amd64)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: chord-client-windows-amd64
         path: ./release
     - name: Download artifacts (darwin/arm64)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: chord-client-darwin-arm64
         path: ./release
