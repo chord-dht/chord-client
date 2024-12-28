@@ -21,6 +21,10 @@ jobs:
             arch: amd64
           - os: macos-latest
             arch: amd64
+    
+    env:
+      GOOS: $(echo ${{ matrix.os }} | cut -d '-' -f 1)
+      GOARCH: ${{ matrix.arch }}
 
     steps:
     - name: Checkout code
@@ -40,14 +44,13 @@ jobs:
 
     - name: Build
       run: |
-        GOOS=$(echo ${{ matrix.os }} | cut -d '-' -f 1)
-        GOARCH=${{ matrix.arch }}
-        go build -o chord-client
+        GOOS=$GOOS GOARCH=$GOARCH go build -o chord-client
     
     - name: Create release artifact
       run: |
         mkdir -p release
         mv chord-client release/
+        mv dist release/
         tar -czf chord-client-${GOOS}-${GOARCH}.tar.gz -C release .
     
     - name: Get the current version
