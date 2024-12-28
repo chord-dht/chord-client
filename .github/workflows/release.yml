@@ -80,7 +80,7 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: '**'
+        name: 'chord-client-linux-amd64, chord-client-linux-arm64, chord-client-windows-amd64, chord-client-darwin-arm64'
         path: ./release
 
     - name: Upload release asset
