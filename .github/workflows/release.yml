@@ -1,8 +1,9 @@
-name: Release
+name: Build and Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -25,17 +26,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+
     - name: Download and extract dist
       run: |
         REPO="chord-dht/chord-frontend"
         LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep "browser_download_url.*dist.tar.gz" | cut -d '"' -f 4)
         curl -L -o dist.tar.gz $LATEST_RELEASE
         tar -xzf dist.tar.gz
-
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.23'
 
     - name: Build
       run: |
@@ -48,10 +49,18 @@ jobs:
         mkdir -p release
         mv chord-client release/
         tar -czf chord-client-${GOOS}-${GOARCH}.tar.gz -C release .
+    
+    - name: Get the current version
+      id: get_version
+      run: echo ::set-output name=version::$(date +'%Y.%m.%d.%H%M%S')
 
     - name: Upload release asset
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        name: Release ${{ steps.get_version.outputs.version }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        draft: false
+        prerelease: false
         files: ./chord-client-${GOOS}-${GOARCH}.tar.gz
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        generate_release_notes: true
