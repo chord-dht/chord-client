@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+          - os: ubuntu-latest
+            arch: arm64
+          - os: windows-latest
+            arch: amd64
+          - os: macos-latest
+            arch: amd64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download and extract dist
+      run: |
+        REPO="chord-dht/chord-frontend"
+        LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep "browser_download_url.*dist.tar.gz" | cut -d '"' -f 4)
+        curl -L -o dist.tar.gz $LATEST_RELEASE
+        tar -xzf dist.tar.gz
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'
+
+    - name: Build
+      run: |
+        GOOS=$(echo ${{ matrix.os }} | cut -d '-' -f 1)
+        GOARCH=${{ matrix.arch }}
+        go build -o chord-client
+    
+    - name: Create release artifact
+      run: |
+        mkdir -p release
+        mv chord-client release/
+        tar -czf chord-client-${GOOS}-${GOARCH}.tar.gz -C release .
+
+    - name: Upload release asset
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ./chord-client-${GOOS}-${GOARCH}.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
