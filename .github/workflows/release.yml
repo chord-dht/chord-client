@@ -81,13 +81,13 @@ jobs:
 
     - name: Get the current version
       id: get_version
-      run: echo ::set-output name=version::$(date +'%Y.%m.%d.%H%M%S')
+      run: echo "version=$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_ENV
 
     - name: Upload release asset
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v${{ steps.get_version.outputs.version }}
-        name: Release ${{ steps.get_version.outputs.version }}
+        tag_name: v${{ env.version }}
+        name: Release ${{ env.version }}
         token: ${{ secrets.GITHUB_TOKEN }}
         draft: false
         prerelease: false
