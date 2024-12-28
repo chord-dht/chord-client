@@ -6,15 +6,16 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/chord-dht/chord-backend/router"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-// Check if a port is available
+// Check if a port is available on localhost
 func isPortAvailable(port int) bool {
-	ln, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+	ln, err := net.Listen("tcp", "localhost:"+strconv.Itoa(port))
 	if err != nil {
 		return false
 	}
@@ -24,26 +25,29 @@ func isPortAvailable(port int) bool {
 
 // UpdateConfig updates the config file with the new port
 func UpdateConfig(port int, originalPort int) {
-	if port != originalPort {
-		configPath := "./dist/config.json"
-		configData, err := os.ReadFile(configPath)
-		if err != nil {
-			log.Fatalf("Failed to read config file: %v", err)
-		}
-		var config map[string]interface{}
-		if err := json.Unmarshal(configData, &config); err != nil {
-			log.Fatalf("Failed to unmarshal config file: %v", err)
-		}
+	if port == originalPort {
+		return
+	}
 
-		config["CHORD_ADDRESS"] = "http://localhost:" + strconv.Itoa(port)
-		newConfigData, err := json.MarshalIndent(config, "", "  ")
-		if err != nil {
-			log.Fatalf("Failed to marshal config file: %v", err)
-		}
+	configPath := "./dist/config.json"
+	configData, err := os.ReadFile(configPath)
+	if err != nil {
+		log.Fatalf("Failed to read config file: %v", err)
+	}
 
-		if err := os.WriteFile(configPath, newConfigData, os.ModePerm); err != nil {
-			log.Fatalf("Failed to write config file: %v", err)
-		}
+	var config map[string]interface{}
+	if err := json.Unmarshal(configData, &config); err != nil {
+		log.Fatalf("Failed to unmarshal config file: %v", err)
+	}
+
+	config["CHORD_ADDRESS"] = "http://localhost:" + strconv.Itoa(port)
+	newConfigData, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal config file: %v", err)
+	}
+
+	if err := os.WriteFile(configPath, newConfigData, os.ModePerm); err != nil {
+		log.Fatalf("Failed to write config file: %v", err)
 	}
 }
 
@@ -57,11 +61,16 @@ func SetupStatic(r *gin.Engine) {
 func main() {
 	port := 21776
 	originalPort := port
+
 	for !isPortAvailable(port) {
+		log.Printf("Port %d is not available, trying next port...\n", port)
 		port++
+		time.Sleep(100 * time.Millisecond) // Add a small delay to avoid rapid port checking
 	}
+
 	// Update config.json only if the port has changed
 	UpdateConfig(port, originalPort)
+	log.Printf("Using port: %d\n", port)
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
