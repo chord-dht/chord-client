@@ -3,8 +3,8 @@ github.com/bytedance/sonic v1.12.6/go.mod h1:B8Gt/XvtZ3Fqj+iSKMypzymZxw/FVwgIGKz
 github.com/bytedance/sonic/loader v0.1.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
 github.com/bytedance/sonic/loader v0.2.1 h1:1GgorWTqf12TA8mma4DDSbaQigE2wOgQo7iCjjJv3+E=
 github.com/bytedance/sonic/loader v0.2.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
-github.com/chord-dht/chord-backend v0.0.2 h1:XVuuS2ihTqefm26pg6+nHt/vjHYBEuLKtKWe7+uxK/k=
-github.com/chord-dht/chord-backend v0.0.2/go.mod h1:Bz8addYfDzfehVqkUNGgKFwtT2Nrf7AkgxfeLp3esw4=
+github.com/chord-dht/chord-backend v0.0.3 h1:/RVEsMAvUZNwss4szar8sc3z9zlHJpTlkIh6VKI9a4E=
+github.com/chord-dht/chord-backend v0.0.3/go.mod h1:Bz8addYfDzfehVqkUNGgKFwtT2Nrf7AkgxfeLp3esw4=
 github.com/chord-dht/chord-core v0.0.1 h1:Qn3b7A7xcCXwNU7O6FFKGnAPpR0Se/3VV0ABfBRR/jk=
 github.com/chord-dht/chord-core v0.0.1/go.mod h1:cp68Pop4B9G85FggBLj8weVK+wT8K1seGjcXgEvuzrY=
 github.com/cloudwego/base64x v0.1.4 h1:jwCgWpFanWmN8xoIUHa2rtzmkd5J2plF/dnLS6Xd/0Y=
