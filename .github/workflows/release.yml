@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
 
 jobs:
   download:
@@ -77,36 +77,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Download artifacts (linux/amd64)
+    - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: chord-client-linux-amd64
+        name: '**'
         path: ./release
-    - name: Download artifacts (linux/arm64)
-      uses: actions/download-artifact@v4
-      with:
-        name: chord-client-linux-arm64
-        path: ./release
-    - name: Download artifacts (windows/amd64)
-      uses: actions/download-artifact@v4
-      with:
-        name: chord-client-windows-amd64
-        path: ./release
-    - name: Download artifacts (darwin/arm64)
-      uses: actions/download-artifact@v4
-      with:
-        name: chord-client-darwin-arm64
-        path: ./release
-
-    - name: Get the current version
-      id: get_version
-      run: echo "version=$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_ENV
 
     - name: Upload release asset
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v${{ env.version }}
-        name: Release ${{ env.version }}
+        tag_name: ${{ github.ref }}
+        name: Release ${{ github.ref }}
         token: ${{ secrets.GITHUB_TOKEN }}
         draft: false
         prerelease: false
