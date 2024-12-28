@@ -20,7 +20,7 @@ jobs:
           - os: windows
             arch: amd64
           - os: macos
-            arch: amd64
+            arch: arm64
 
     steps:
     - name: Checkout code
