@@ -1,5 +1,11 @@
 # chord-client
 
+## Release
+
+<https://github.com/chord-dht/chord-client/releases>
+
+## Compile
+
 Download and unzip the dist from: <https://github.com/chord-dht/chord-frontend/releases>
 
 ```shell
