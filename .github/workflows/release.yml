@@ -11,15 +11,14 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu, windows, macos]
         include:
-          - os: ubuntu
+          - os: linux
             arch: amd64
-          - os: ubuntu
+          - os: linux
             arch: arm64
           - os: windows
             arch: amd64
-          - os: macos
+          - os: darwin
             arch: arm64
 
     steps:
