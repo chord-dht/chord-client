@@ -48,6 +48,37 @@ jobs:
         mv dist release/
         tar -czf chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz -C release .
     
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: chord-client-${{ matrix.os }}-${{ matrix.arch }}
+        path: chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifacts (linux/amd64)
+      uses: actions/download-artifact@v3
+      with:
+        name: chord-client-linux-amd64
+        path: ./release
+    - name: Download artifacts (linux/arm64)
+      uses: actions/download-artifact@v3
+      with:
+        name: chord-client-linux-arm64
+        path: ./release
+    - name: Download artifacts (windows/amd64)
+      uses: actions/download-artifact@v3
+      with:
+        name: chord-client-windows-amd64
+        path: ./release
+    - name: Download artifacts (darwin/arm64)
+      uses: actions/download-artifact@v3
+      with:
+        name: chord-client-darwin-arm64
+        path: ./release
+
     - name: Get the current version
       id: get_version
       run: echo ::set-output name=version::$(date +'%Y.%m.%d.%H%M%S')
@@ -60,5 +91,5 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         draft: false
         prerelease: false
-        files: ./chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+        files: ./release/*.tar.gz
         generate_release_notes: true
