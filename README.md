@@ -18,3 +18,19 @@ go build
 
 ./chord-client
 ```
+
+## Interface
+
+![new node create](pics/new_node_create.gif)
+
+---
+
+![new node join](pics/new_node_join.gif)
+
+---
+
+![state](pics/state.gif)
+
+---
+
+![file](pics/file.gif)
