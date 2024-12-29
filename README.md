@@ -1,5 +1,11 @@
 # chord-client
 
+This project is a distributed hash table (DHT) client named `chord-client`.
+
+## Wiki
+
+<https://github.com/chord-dht/chord-client/wiki>
+
 ## Release
 
 <https://github.com/chord-dht/chord-client/releases>
