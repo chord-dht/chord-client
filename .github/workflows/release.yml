@@ -63,9 +63,13 @@ jobs:
     - name: Create release artifact
       run: |
         mkdir -p release
-        mv chord-client release/
+        if [[ "${{ matrix.os }}" == "windows" ]]; then
+          mv chord-client release/chord-client.exe
+        else
+          mv chord-client release/
+        fi
         mv dist release/
-        tar -czf chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz -C release .
+        zip -r chord-client-${{ matrix.os }}-${{ matrix.arch }}.zip release
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
