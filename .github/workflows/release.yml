@@ -75,7 +75,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: chord-client-${{ matrix.os }}-${{ matrix.arch }}
-        path: chord-client-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+        path: chord-client-${{ matrix.os }}-${{ matrix.arch }}.zip
 
   release:
     needs: build
@@ -113,5 +113,5 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         draft: false
         prerelease: false
-        files: ./release/*.tar.gz
+        files: ./release/*.zip
         generate_release_notes: true
