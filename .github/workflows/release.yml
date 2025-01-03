@@ -69,7 +69,9 @@ jobs:
           mv chord-client release/
         fi
         mv dist release/
-        zip -r chord-client-${{ matrix.os }}-${{ matrix.arch }}.zip release/*
+        cd release
+        zip -r ../chord-client-${{ matrix.os }}-${{ matrix.arch }}.zip *
+        cd ..
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
